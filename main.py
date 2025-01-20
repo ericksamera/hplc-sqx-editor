@@ -134,7 +134,7 @@ class App:
         Creates a new sequence table using the local template `.sqx` file and 
         processes it like an uploaded file.
         """
-        template_file_path = pathlib.Path(__file__).parent / "template" / "HPLC1-2025-01-13 HPLC Training.sqx"
+        template_file_path = pathlib.Path(__file__).parent.joinpath("template").joinpath("HPLC1-2025-01-13 HPLC Training.sqx")
         if not template_file_path.exists():
             st.error("Template `.sqx` file not found.")
             return
@@ -253,8 +253,20 @@ class App:
         that triggers XML and hash updates, then returns a ZIP.
         """
 
+        sample_type_display_map = {
+            "Sample": "🟢 Sample",
+            "Blank": "⚪ Blank",
+            "Double blank": "🟠 Double blank",
+            "Calibration": "🔵 Cal. Std.",
+            "QC check": "🟣 QC check",
+            "Spike": "⚫ Spike",
+            "Sys. Suit.": "🟤 Sys. Suit.",
+        }
+        sample_type_reverse_map = {v: k for k, v in sample_type_display_map.items()}
+
         data_dicts = self._samples_to_dict(st.session_state.SAMPLES_LIST)
         data_df = pd.DataFrame(data_dicts)
+        data_df["sample-type"] = data_df["sample-type"].map(sample_type_display_map)
 
         edited_df = st.data_editor(
             data_df,
@@ -330,6 +342,7 @@ class App:
                 ),
             },
         )
+        edited_df["sample-type"] = edited_df["sample-type"].map(sample_type_reverse_map)
         st.session_state.EDITED_DF = edited_df
 
         output_file_name = st.text_input("Output file name", "SampleListPart_edited.sqx")
