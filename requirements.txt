@@ -1,0 +1,6 @@
+biopython
+streamlit
+streamlit-ext
+streamlit-plotly-events
+plotly
+scipy
