@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 __description__ =\
 """
-Purpose: Streamlit wrapper for sanger-sequence-trim.
+Purpose: Streamlit wrapper.
 """
 __author__ = ["Erick Samera", "Kevin Saulog"]
-__version__ = "1.0.0"
-__comments__ = "stable enough"
+__version__ = "1.1.0"
+__comments__ = "functional-ish?"
 # --------------------------------------------------
-import streamlit as st
 import io
 import hashlib
 import re
@@ -15,7 +14,9 @@ import xml.etree.ElementTree as ET
 import zipfile
 import pathlib
 import shutil
+
 import pandas as pd
+import streamlit as st
 # --------------------------------------------------
 class SampleListEntry:
     def __init__(self, sample_name, sample_type, acquisition_method, vial, volume):
@@ -78,7 +79,8 @@ class App:
         
         author_text = '; '.join([f"[@{author}]({git_link})" for author, git_link in zip(__author__, ("https://github.com/ericksamera", "https://github.com/ksaulog"))])
         st.caption(f'{author_text} | v{__version__} | {__comments__}')
-        st.markdown('These are a set of open-source tools to make handling electropherogram data easier.')
+        st.markdown('A tool for editing the annoying proprietary sequence file.')
+        st.markdown('WARNING: Just a proof of concept, loads any sequence file but fixing some issues with saving and loading on the machine.')
         st.divider()
 
     def _reset_temp_dir(self) -> None:
